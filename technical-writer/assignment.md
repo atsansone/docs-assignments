@@ -9,18 +9,17 @@ kubectl get pods --namespace
 ```
 
 Speaking of commands, kubectl is the CLI that is used to interact with k8s.
-The kubectl cli communicates with the kubernetes API server.
+The kubectl cli communicates with the Kubernetes API server.
 
 Another command that is helpful is the kubectl logs command.
 
-In Azure, kubernetes is available, just like other cloud providers.
-This command is used to retrieve the logs of a specific pod - do use this when you have to review logs or need to debug a container.
+In Azure, Kubernetes is available, just like other cloud providers.
+This command retrieves the logs of a specific pod - do use this when you have to review logs or need to debug a container.
 
 Another we will discuss is the `kubectl exec` command.
 
 A command that we can use to debug a container from the inside or to explore the environment of the container itself.
-I recommend when debugging you start with kubectl get pods, then `kubectl logs` and lastly we can use `kubectl exec` to explore the inside of the container and review other log files or configurations.
-
+When debugging, start with `kubectl get pods`, `kubectl logs`, and `kubectl exec` to explore the inside of the container and review other log files or configurations.
 
 **Note:** The command `kubectl debug` is another option to consider when debugging a container.
 This command can be used to create a clone of a pod that does not terminate if an error is experienced inside the container.
