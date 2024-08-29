@@ -20,10 +20,12 @@ and scale. You can use the methods in this guide on any pod.
 Debugging a Kubernetes deployment involves finding a pod with issues,
 identifying those issues, and then resolving those issues.
 
-## Find Pods with Possible Issues
+## Find Which Pods Have Potential Issues
 
 To find which pod doesn't behave as expected,
-run `kubectl get pods`.
+run the `kubectl get pods` command.
+If you configured your cluster to use [namespaces][k8s-namespaces],
+include that namespace as an option to this command.
 
 ```terminal
 $ kubectl get pods [--namespace=<namespace-name>|--all-namespaces]
@@ -36,12 +38,30 @@ apache-deployment-1370807587-fg172   0/1       Pending   0          1m
 apache-deployment-1370807587-fz9sd   0/1       Pending   0          1m
 ```
 
-If you configured your cluster to use [namespaces][k8s-namespaces],
-include that namespace as an option to this command.
-
 If any pod returns a status other than `Running`, it might have a problem.
 
+## Check Pod for Issues
 
+To find out why one of your pods isn't running,
+you need to get more details about that pod.
+To get those details, run the `kubectl describe pod` command.
+
+```terminal
+$ kubectl describe pod apache-deployment-1370807587-fz9sd
+
+  Name:		apache-deployment-1370807587-fz9sd
+  Namespace:	default
+...
+  fit failure on node (kubernetes-node-8tb9): Node didn't have enough resource: CPU, requested: 1000, used: 1420, capacity: 2000
+  fit failure on node (kubernetes-node-xfl4): Node didn't have enough resource: CPU, requested: 1000, used: 1100, capacity: 2000
+```
+
+This pod couldn't start because the node on which it runs couldn't provide
+the required resources. Both nodes have two cores or 2,000 millicores each.
+The first node had 1,420 millicores in use and the second had 1,100.
+Both nodes didn't have enough millicores available to start this pod.
+
+## Check for When Pod First Had an Issue
 
 To review logs when debugging a container, run the `kubectl logs` command.
 This retrieves the logs of a specific pod.
