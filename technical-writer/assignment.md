@@ -1,17 +1,32 @@
 # Debug Your Kubernetes Deployment
 
-You can debug a Kubernetes deployment or a Kubernetes cluster. A Kubernetes deployment consists of the parts of a Kubernetes-hosted app. A Kubernetes cluster consists of the group of Kubernetes workers that run your app. This guide covers debugging a Kubernetes deployment. To debug your deployments, use the [`kubectl`][] command line (CLI) tool.
+In Kubernetes, you can debug either a deployment or a cluster.
+A Kubernetes deployment consists of the parts of a Kubernetes-hosted app.
+A Kubernetes cluster consists of the group of Kubernetes workers that run your app.
+This guide covers debugging a Kubernetes deployment.
+
+Like most Kubernetes management tasks,
+debugging uses the [`kubectl`][] command line (CLI) tool.
 
 :scroll:
 To learn how to debug your cluster,
 refer to the [Kubernetes Troubleshooting Clusters guide][k8s-tb-clusters].
+
+## How Do You Debug a Deployment?
 
 A Kubernetes deployment consists of _[pods][k8s-debug-pods]_.
 Each pod represents a group of containers deployed together that run one application.
 One Kubernetes deployment might run more than one pod.
 You can use the methods in this guide on any single pod. 
 
-## Find Which Pods Have Potential Issues
+To debug a Kubernetes deployment involves three activities:
+
+1. Find the misbehaving pod
+2. Find why the cause of the pod's behavior
+   - If needed, find when the behavior started
+3. Fix the pod's behavior
+
+## Find the Misbehaving Pod
 
 To find any misbehaving pods, run the `kubectl get pods` command.
 If your pods uses [namespaces][k8s-namespaces],
@@ -33,10 +48,13 @@ If any pod returns a status other than `Running`,
 it might have a problem.
 The last two results in the preceeding response might have an issue.
 
-## Check Pod for Issues
+## Check Pod for Cause of Misbehavior
 
-To find out why one of your pods isn't running, get details about that pod.
-To get those details, run the `kubectl describe pod` command.
+To reveal the health of a pod, ask for a description of that pod
+with the `kubectl describe pod` command.
+This command returns the details of the pod and its related resources
+like containers and storage volumes. It also returns the latest events
+that occurred with those resources.
 
 ```terminal
 $ kubectl describe pod apache-deployment-1370807587-fz9sd
@@ -50,12 +68,12 @@ $ kubectl describe pod apache-deployment-1370807587-fz9sd
   fit failure on node (kubernetes-node-xfl4): Node didn't have enough resource: CPU, requested: 1000, used: 1100, capacity: 2000
 ```
 
-This pod couldn't start because the hosting node couldn't provide the required resources.
-Both nodes have two cores or 2,000 [millicores][millicore] each.
-The first node had 1,420 millicores in use and the second had 1,100.
-Neither node had enough spare millicores to start this Apache pod.
+This pod couldn't start. Neither hosting node could provision the required compute resources.
+Both nodes can provision up to two cores, or 2,000 [millicores][millicore], each.
+The first node was using 1,420 millicores and the second was using 1,100.
+Neither node had enough spare millicores to start the Apache pod.
 
-## Check for When Pod First Had an Issue
+## Check for When the Misbehavior Started
 
 To find when an issue might have arisen, review the logs.
 To get the logs of a specific pod,
