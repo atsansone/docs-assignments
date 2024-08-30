@@ -1,27 +1,25 @@
 # Debug Your Kubernetes Application
 
 Kubernetes can simplify a lot of application deployment.
-That said, troubleshooting Kubernetes applications might seem daunting
-with all of the layers of abstraction that make up one deployment.
+That said, troubleshooting Kubernetes applications might seem daunting.
+One application can have so many layers of abstraction.
 
 At its core, Kubernetes application consists of _[Pods][k8s-debug-pods]_
 and [Services][k8s-services].
-Each Pod represents one or more [containers][k8s-container]
-for application components that share storage and network resources.
+Each Pod represents one or more application [containers][k8s-container]
+that share storage and network resources.
 Each Service abstracts how Pods communicate with each other
 and the Internet.
 Before Kubernetes, you had to spin up multiple servers that each ran
 one part of an Internet application.
-With Kubernetes, you can deploy one Pod that serves that whole application
-through one Service.
+With Kubernetes, you can deploy one Pod that serves that whole application.
 
 This guide focuses on Pods.
-The Debugging Services page covers the troubleshooting of Services.
+The Debugging Services page covers fixing Services.
 
-:scroll:
-You can also debug the components that serve Kubernetes clusters.
+:blue_book: You can also debug the components that serve Kubernetes clusters.
 To learn how to debug a cluster,
-consult [Troubleshooting Clusters][k8s-tb-clusters] in the Kubernetes documentation.
+consult [Troubleshooting Clusters][k8s-tb-clusters].
 
 ## How Do You Debug an Application?
 
@@ -32,14 +30,14 @@ Debugging a Kubernetes application involves three activities:
    - If needed, find when it stopped working
 3. Fix the Pod
 
-Like most Kubernetes management tasks,
-you debug your application using the [`kubectl`][] command line (CLI) tool.
+Like most Kubernetes tasks,
+you use the [`kubectl`][] command line (CLI) tool to debug your application.
 
 ## Find the Misbehaving Pod
 
-The complexity of a failing Kubernetes application might make 
-troubleshooting seem difficult. To reduce this complexity,
-you can find which Pods aren't working.
+The complexity of a Kubernetes application can make 
+troubleshooting difficult. To reduce this complexity,
+you can find which Pods aren't working first.
 To find which Pods don't work, run the `kubectl get pods` command.
 If your Pods uses [namespaces][k8s-namespaces],
 add the `--namespace` option to this command.
@@ -63,18 +61,16 @@ it might have a problem.
 The last two results in the preceeding response might have an issue.
 If no Pod displays a phase other than `Running`,
 
-To learn more about how to debug a Pod,
-consult [Debugging Pods][k8s-debug-Pods] in the Kubernetes documentation.
+:blue_book: To learn more about how to debug a Pod,
+consult [Debugging Pods][k8s-debug-Pods].
 
 ## Find Out Why the Pod Doesn't Work
 
-With the misbehaving Pod or Pods identified,
-you can check each one for possible issues.
-To check a Pod, ask for a description of that Pod
-with the `kubectl describe Pod` command.
-This command returns the details of the Pod and its related resources
-like containers and storage volumes. It also returns the latest events
-that occurred with those resources.
+With the misbehaving Pods identified,
+check each one for issues.
+To check a Pod's status, run the `kubectl describe pod` command.
+This command returns the details of the Pod and its related resources.
+It also returns the latest events that occurred with those resources.
 
 ### Example of kubectl describe Pod
 
@@ -99,10 +95,11 @@ Neither node had enough spare millicores to start the Apache Pod.
 ## Check When the Misbehavior Started
 
 Not all issues might reveal themselves with this little effort.
-These logs return error messages and stack traces to help you identify
-a configuration error, missing dependency, or a runtime exception.
-To get the logs of a specific Pod,
-run the `kubectl logs` command appending the `Pod` name.
+Check the logs for error messages and stack traces.
+These log entries should identify issues like configuration errors,
+missing dependencies, or runtime exceptions.
+To get the logs for a specific Pod,
+run the `kubectl logs <pod-name>` command.
 
 ### Example of kubectl logs
 
@@ -110,16 +107,15 @@ run the `kubectl logs` command appending the `Pod` name.
 $ kubectl logs apache-deployment-1370807587-fz9sd --all-containers=true
 ```
 
-To learn more about Kubernetes logs,
-consult [kubectl logs][k8s-logs] in the Kubernetes documentation.
+:blue_book: To learn more about Kubernetes logs,
+consult [kubectl logs][k8s-logs].
 
 ## Fix the Misbehaving Pod
 
 How you fix your Pod depends on the nature of the issues you find.
 
-To find potential solutions to Kubernetes application errors,
-consult [Troubleshoot applications][k8s-tb-apps] in the
-Kubernetes documentation.
+:blue_book: To find solutions for Kubernetes application errors,
+consult [Troubleshoot applications][k8s-tb-apps].
 
 ## To Learn More
 
