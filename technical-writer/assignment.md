@@ -123,7 +123,19 @@ Kubernetes documentation.
 
 ## To Learn More
 
-[How to debug Kubernetes pods]: https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/
+To learn more about application debugging,
+consult these guides in the Kubernetes documentation
+
+### Debugging Guides
+
+* [Troubleshooting Applications][k8s-tb-apps]
+* [Debug Pods][k8s-debug-pods]
+
+### `kubectl` commands reference
+
+* [`kubectl`][]
+* [`kubectl debug`][]
+* [`kubectl logs`][k8s-logs]
 
 [`kubectl`]: https://kubernetes.io/docs/reference/kubectl/
 
