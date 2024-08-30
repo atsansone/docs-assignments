@@ -1,8 +1,11 @@
 # Debug Your Kubernetes Application
 
-Kubernetes can simplify a lot of application deployment.
-That said, troubleshooting Kubernetes applications might seem daunting.
-One application can have so many layers of abstraction.
+Kubernetes can simplify deploying applications.
+Before Kubernetes, you had to spin up multiple servers that each ran
+one part of an Internet application.
+With Kubernetes, you can deploy one item that serves that whole application.
+Troubleshooting Kubernetes applications might seem daunting as
+each application has layers of abstraction.
 
 At its core, Kubernetes application consists of _[Pods][k8s-debug-pods]_
 and [Services][k8s-services].
@@ -10,9 +13,6 @@ Each Pod represents one or more application [containers][k8s-container]
 that share storage and network resources.
 Each Service abstracts how Pods communicate with each other
 and the Internet.
-Before Kubernetes, you had to spin up multiple servers that each ran
-one part of an Internet application.
-With Kubernetes, you can deploy one Pod that serves that whole application.
 
 This guide focuses on Pods.
 The Debugging Services page covers fixing Services.
@@ -35,17 +35,16 @@ you use the [`kubectl`][] command line (CLI) tool to debug your application.
 
 ## Find the Misbehaving Pod
 
-The complexity of a Kubernetes application can make 
-troubleshooting difficult. To reduce this complexity,
-you can find which Pods aren't working first.
-To find which Pods don't work, run the `kubectl get pods` command.
-If your Pods uses [namespaces][k8s-namespaces],
+The complexity of a Kubernetes application makes troubleshooting difficult.
+To reduce this complexity,
+first run the `kubectl get pods` command to find which Pods aren't working.
+If your Pods use [namespaces][k8s-namespaces],
 add the `--namespace` option to this command.
 
-### Example of kubectl get Pods
+### Example of `kubectl get pods`
 
 ```terminal
-$ kubectl get Pods [--namespace=<namespace-name>|--all-namespaces]
+$ kubectl get pods [--namespace=<namespace-name>|--all-namespaces]
 
 NAME                                READY     STATUS    RESTARTS   AGE
 apache-deployment-1006230814-6winp   1/1       Running   0         15m
@@ -58,11 +57,11 @@ apache-deployment-1370807587-fz9sd   0/1       Pending   0          1m
 
 If the status of any Pod displays a [phase][k8s-phase] other than `Running`,
 it might have a problem.
-The last two results in the preceeding response might have an issue.
-If no Pod displays a phase other than `Running`,
+The last two results in the preceding response might have an issue.
+If no Pod displays a phase other than Running, check each Pod for issues.
 
 :blue_book: To learn more about how to debug a Pod,
-consult [Debugging Pods][k8s-debug-Pods].
+consult [Debugging Pods][k8s-debug-pods].
 
 ## Find Out Why the Pod Doesn't Work
 
@@ -72,10 +71,10 @@ To check a Pod's status, run the `kubectl describe pod` command.
 This command returns the details of the Pod and its related resources.
 It also returns the latest events that occurred with those resources.
 
-### Example of kubectl describe Pod
+### Example of `kubectl describe pod`
 
 ```terminal
-$ kubectl describe Pod apache-deployment-1370807587-fz9sd
+$ kubectl describe pod apache-deployment-1370807587-fz9sd
 
   Name:     apache-deployment-1370807587-fz9sd
   Namespace:    default
@@ -96,15 +95,23 @@ Neither node had enough spare millicores to start the Apache Pod.
 
 Not all issues might reveal themselves with this little effort.
 Check the logs for error messages and stack traces.
-These log entries should identify issues like configuration errors,
-missing dependencies, or runtime exceptions.
+These log entries should identify issues like configuration errors
+or runtime exceptions.
 To get the logs for a specific Pod,
 run the `kubectl logs <pod-name>` command.
 
-### Example of kubectl logs
+### Example of `kubectl logs`
 
 ```terminal
 $ kubectl logs apache-deployment-1370807587-fz9sd --all-containers=true
+
+[08/30/2024:10:47:28] [info] [pid 1] AH00558: Apache/2.4.52 (Unix) configured -- resuming normal operations
+[08/30/2024:10:47:28] [info] [pid 1] AH00557: Apache/2.4.52 (Unix) configured
+[08/30/2024:10:47:28] [info] [pid 1] AH00559: Apache/2.4.52 (Unix) configured: listening on port 80
+[08/30/2024:10:47:28] [info] [pid 1] AH00559: Apache/2.4.52 (Unix) configured: listening on port 443
+[08/30/2024:10:47:28] [info] [pid 1] AH00559: Apache/2.4.52 (Unix) configured: listening on port 8080
+[08/30/2024:10:47:28] [info] [pid 1] AH00559: Apache/2.4.52 (Unix) configured: listening on port 8443
+[08/30/2024:10:47:28] [info] [pid 1] AH00559: Apache/2.4.52 (Unix) configured: listening on port 8000
 ```
 
 :blue_book: To learn more about Kubernetes logs,
@@ -120,7 +127,7 @@ consult [Troubleshoot applications][k8s-tb-apps].
 ## To Learn More
 
 To learn more about application debugging,
-consult these guides in the Kubernetes documentation
+consult these guides in the Kubernetes documentation.
 
 ### Debugging Guides
 
@@ -142,7 +149,7 @@ consult these guides in the Kubernetes documentation
 
 [k8s-namespaces]: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
 
-[k8s-debug-pods]: https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/
+[k8s-services]: https://kubernetes.io/docs/concepts/services-networking/service/
 
 [millicore]: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-cpu
 
